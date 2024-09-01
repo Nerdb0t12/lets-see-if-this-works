@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Games Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a2a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+        .game-card a {
+            color: white;
+            text-decoration: none;
+        }
+        .back-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Space Games</h1>
+        <div class="game-grid" id="gameGrid">
+            <!-- Game cards will be added here by JavaScript -->
+        </div>
+        <a href="index.html" class="back-button">Back to Home</a>
+    </div>
+
+    <script>
+        // Array of game objects
+        const games = [
+            {
+                title: "Color Match",
+                description: "Test your reflexes in this cosmic color challenge!",
+                link: "color-match.html"
+            },
+            {
+                title: "Space Puzzle",
+                description: "Coming soon: Solve galactic puzzles in this brain-teasing adventure!",
+                link: "#"
+            }
+            // Add new games here
+        ];
+
+        // Function to create game cards
+        function createGameCards() {
+            const gameGrid = document.getElementById('gameGrid');
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <a href="${game.link}">
+                        <h2>${game.title}</h2>
+                        <p>${game.description}</p>
+                    </a>
+                `;
+                gameGrid.appendChild(gameCard);
+            });
+        }
+
+        // Call the function to create game cards
+        createGameCards();
+    </script>
+</body>
+</html>
