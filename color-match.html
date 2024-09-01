@@ -16,37 +16,6 @@
             overflow: hidden;
             position: relative;
         }
-        .star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 3px 1px white;
-        }
-        .star::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 1.5px solid transparent;
-            border-right: 1.5px solid transparent;
-            border-bottom: 4px solid white;
-        }
-        .nebula {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(100,0,255,0.2) 0%, rgba(100,0,255,0) 70%);
-            opacity: 0.5;
-            animation: nebula-move 60s infinite alternate;
-        }
-        @keyframes nebula-move {
-            0% { transform: translate(-10%, -10%); }
-            100% { transform: translate(10%, 10%); }
-        }
         #game-container {
             text-align: center;
             background-color: rgba(255, 255, 255, 0.9);
@@ -80,9 +49,45 @@
             font-size: 24px;
             margin-top: 20px;
         }
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 20;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 3px 1px white;
+        }
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(100,0,255,0.2) 0%, rgba(100,0,255,0) 70%);
+            opacity: 0.5;
+            animation: nebula-move 60s infinite alternate;
+        }
+        @keyframes nebula-move {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(10%, 10%); }
+        }
     </style>
 </head>
 <body>
+    <a href="index.html" class="home-button">Home</a>
     <div class="nebula"></div>
     <div id="game-container">
         <h1>Space Color Match</h1>
@@ -104,7 +109,7 @@
             document.body.appendChild(star);
         }
 
-        // Game logic (same as before)
+        // Your existing game logic here
         const colorWord = document.getElementById('color-word');
         const matchBtn = document.getElementById('match-btn');
         const noMatchBtn = document.getElementById('no-match-btn');
