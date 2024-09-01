@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Color Match Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0a0a2a;
+            overflow: hidden;
+            position: relative;
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 3px 1px white;
+        }
+        .star::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 1.5px solid transparent;
+            border-right: 1.5px solid transparent;
+            border-bottom: 4px solid white;
+        }
+        .nebula {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(100,0,255,0.2) 0%, rgba(100,0,255,0) 70%);
+            opacity: 0.5;
+            animation: nebula-move 60s infinite alternate;
+        }
+        @keyframes nebula-move {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(10%, 10%); }
+        }
+        #game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            z-index: 10;
+        }
+        #color-word {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        button {
+            font-size: 18px;
+            margin: 0 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #timer, #score {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nebula"></div>
+    <div id="game-container">
+        <h1>Space Color Match</h1>
+        <div id="color-word">Color</div>
+        <button id="match-btn">Match</button>
+        <button id="no-match-btn">No Match</button>
+        <button id="reset-btn">Reset</button>
+        <div id="timer">Time: 30s</div>
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        // Add stars
+        for (let i = 0; i < 50; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            document.body.appendChild(star);
+        }
+
+        // Game logic (same as before)
+        const colorWord = document.getElementById('color-word');
+        const matchBtn = document.getElementById('match-btn');
+        const noMatchBtn = document.getElementById('no-match-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+
+        const colors = ['red', 'blue', 'green', 'purple', 'orange'];
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval;
+        let gameActive = false;
+
+        function startGame() {
+            score = 0;
+            timeLeft = 30;
+            gameActive = true;
+            updateScore();
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+            newRound();
+            enableButtons(true);
+        }
+
+        function newRound() {
+            if (!gameActive) return;
+            const wordIndex = Math.floor(Math.random() * colors.length);
+            const colorIndex = Math.floor(Math.random() * colors.length);
+            colorWord.textContent = colors[wordIndex];
+            colorWord.style.color = colors[colorIndex];
+        }
+
+        function checkMatch(isMatch) {
+            if (!gameActive) return;
+            const actualMatch = colorWord.textContent.toLowerCase() === colorWord.style.color;
+            if (isMatch === actualMatch) {
+                score++;
+            }
+            updateScore();
+            newRound();
+        }
+
+        function updateScore() {
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        function updateTimer() {
+            timerDisplay.textContent = `Time: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                endGame();
+            } else {
+                timeLeft--;
+            }
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            gameActive = false;
+            colorWord.textContent = "Game Over!";
+            colorWord.style.color = "black";
+            enableButtons(false);
+            alert(`Game over! Your score: ${score}`);
+        }
+
+        function enableButtons(enable) {
+            matchBtn.disabled = !enable;
+            noMatchBtn.disabled = !enable;
+        }
+
+        matchBtn.addEventListener('click', () => checkMatch(true));
+        noMatchBtn.addEventListener('click', () => checkMatch(false));
+        resetBtn.addEventListener('click', startGame);
+
+        startGame();
+    </script>
+</body>
+</html>
