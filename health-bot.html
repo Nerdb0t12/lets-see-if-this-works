@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Health Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0a0a2a;
+            color: white;
+        }
+        #chat-container {
+            width: 300px;
+            height: 500px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        #user-input {
+            display: flex;
+            padding: 10px;
+        }
+        #user-input input {
+            flex-grow: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        #user-input button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .user {
+            background-color: rgba(100, 100, 255, 0.3);
+            text-align: right;
+        }
+        .bot {
+            background-color: rgba(100, 255, 100, 0.3);
+        }
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button">Home</a>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <div id="user-input">
+            <input type="text" id="user-message" placeholder="Ask about concussions or sports injuries...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userMessageInput = document.getElementById('user-message');
+
+        const botResponses = {
+            "concussion symptoms": "Common concussion symptoms include headache, dizziness, confusion, nausea, and sensitivity to light or noise. If you suspect a concussion, seek medical attention immediately.",
+            "concussion treatment": "Rest is crucial for concussion recovery. Avoid physical activities and limit screen time. Follow your doctor's instructions and gradually return to normal activities as symptoms improve.",
+            "return to play": "Returning to play after a concussion should be gradual and supervised by a medical professional. It typically involves a step-by-step protocol to ensure full recovery before full participation.",
+            "preventing sports injuries": "To prevent sports injuries: warm up properly, use correct techniques, wear appropriate protective gear, stay hydrated, and don't play through pain.",
+            "sprain vs strain": "A sprain is an injury to a ligament (tissue connecting bones), while a strain is an injury to a muscle or tendon. Both can cause pain and swelling, but treatment may differ.",
+            "rice method": "RICE stands for Rest, Ice, Compression, and Elevation. It's a common first-aid treatment for many sports injuries to reduce pain and swelling.",
+            "default": "I'm not sure about that. Please ask about concussion symptoms, treatment, return to play, preventing sports injuries, sprains vs strains, or the RICE method."
+        };
+
+        function sendMessage() {
+            const userMessage = userMessageInput.value.trim().toLowerCase();
+            if (userMessage) {
+                addMessage(userMessage, 'user');
+                const botReply = getBotReply(userMessage);
+                setTimeout(() => addMessage(botReply, 'bot'), 500);
+                userMessageInput.value = '';
+            }
+        }
+
+        function addMessage(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getBotReply(userMessage) {
+            for (const key in botResponses) {
+                if (userMessage.includes(key)) {
+                    return botResponses[key];
+                }
+            }
+            return botResponses.default;
+        }
+
+        userMessageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial bot message
+        setTimeout(() => addMessage("Hello! I'm your Space Health Bot. How can I help you with concussions or sports injuries today?", 'bot'), 500);
+    </script>
+</body>
+</html>
