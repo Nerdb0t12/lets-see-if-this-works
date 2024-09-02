@@ -15,14 +15,57 @@
             background-color: #0a0a2a;
             overflow: hidden;
             position: relative;
+            color: white;
         }
-        #game-container {
+        #game-container, #chat-container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
             z-index: 10;
+        }
+        #chat-container {
+            display: none;
+            width: 300px;
+            height: 400px;
+            flex-direction: column;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #user-input {
+            display: flex;
+        }
+        #user-input input {
+            flex-grow: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        #user-input button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .user {
+            background-color: rgba(100, 100, 255, 0.3);
+            text-align: right;
+        }
+        .bot {
+            background-color: rgba(100, 255, 100, 0.3);
         }
         #color-word {
             font-size: 48px;
@@ -98,18 +141,15 @@
         <div id="timer">Time: 30s</div>
         <div id="score">Score: 0</div>
     </div>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <div id="user-input">
+            <input type="text" id="user-message" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
 
     <script>
-        // Add stars
-        for (let i = 0; i < 50; i++) {
-            let star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            document.body.appendChild(star);
-        }
-
-        // Your existing game logic here
         const colorWord = document.getElementById('color-word');
         const matchBtn = document.getElementById('match-btn');
         const noMatchBtn = document.getElementById('no-match-btn');
@@ -166,12 +206,12 @@
         }
 
         function endGame() {
-            clearInterval(timerInterval);
             gameActive = false;
+            clearInterval(timerInterval);
             colorWord.textContent = "Game Over!";
-            colorWord.style.color = "black";
+            colorWord.style.color = "white";
             enableButtons(false);
-            alert(`Game over! Your score: ${score}`);
+            showChatInterface();
         }
 
         function enableButtons(enable) {
@@ -183,6 +223,63 @@
         noMatchBtn.addEventListener('click', () => checkMatch(false));
         resetBtn.addEventListener('click', startGame);
 
+        function showChatInterface() {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('chat-container').style.display = 'flex';
+            addMessage("Great job on completing the Color Match game! Your final score was " + score + ". How do you feel the game has helped you? For example, do you think it improved your reaction time or concentration?", 'bot');
+        }
+
+        const chatMessages = document.getElementById('chat-messages');
+        const userMessageInput = document.getElementById('user-message');
+
+        function sendMessage() {
+            const userMessage = userMessageInput.value.trim();
+            if (userMessage) {
+                addMessage(userMessage, 'user');
+                const botReply = getBotReply(userMessage);
+                setTimeout(() => addMessage(botReply, 'bot'), 500);
+                userMessageInput.value = '';
+            }
+        }
+
+        function addMessage(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getBotReply(userMessage) {
+            if (userMessage.toLowerCase().includes('reaction time')) {
+                return "You're right! The Color Match game is designed to improve reaction time. Quick decision-making is crucial in many real-life situations, including sports and driving.";
+            } else if (userMessage.toLowerCase().includes('concentration')) {
+                return "Absolutely! This game helps enhance concentration and focus. These skills are valuable in many aspects of life, from studying to performing complex tasks at work.";
+            } else if (userMessage.toLowerCase().includes('difficult') || userMessage.toLowerCase().includes('hard')) {
+                return "It's normal to find the game challenging at first. As you practice, you'll likely see improvement in your speed and accuracy. Remember, the difficulty is part of what makes it effective for cognitive training!";
+            } else if (userMessage.toLowerCase().includes('fun') || userMessage.toLowerCase().includes('enjoy')) {
+                return "I'm glad you enjoyed the game! Having fun while training your brain is a great way to stay motivated and see consistent improvement over time.";
+            } else {
+                return "That's an interesting perspective! The Color Match game is designed to improve various cognitive skills including reaction time, concentration, and decision-making. These skills can be beneficial in many areas of life. Is there a specific aspect of the game you'd like to discuss further?";
+            }
+        }
+
+        userMessageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Add stars
+        for (let i = 0; i < 50; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            document.body.appendChild(star);
+        }
+
+        // Start the game
         startGame();
     </script>
 </body>
