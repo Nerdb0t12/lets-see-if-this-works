@@ -7,12 +7,11 @@
     <style>
         body, html {
             font-family: 'Roboto', sans-serif;
-            background-color: #050520;
-            color: #fff;
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
+            background: linear-gradient(to bottom, #3a3a5a 0%, #1a1a2e 30%, #0f172a 100%);
         }
         .container {
             max-width: 800px;
@@ -29,7 +28,7 @@
             padding: 20px 0;
         }
         .logo {
-            width: 150px;
+            width: 250px;
             height: auto;
             margin-bottom: 20px;
         }
@@ -78,15 +77,6 @@
             content: '→';
             font-size: 24px;
         }
-        .space-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            z-index: -1;
-        }
         .stars {
             position: fixed;
             top: 0;
@@ -94,6 +84,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
         .star {
             position: absolute;
@@ -108,7 +99,6 @@
     </style>
 </head>
 <body>
-    <div class="space-bg"></div>
     <div class="stars"></div>
     <div class="container">
         <header>
