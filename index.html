@@ -2,80 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Games Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
+            font-family: 'Roboto', sans-serif;
+            background-color: #050520;
+            color: #fff;
             margin: 0;
             padding: 0;
-            background-color: #0a0a2a;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            height: 100%;
             overflow: hidden;
         }
         .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        header {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            padding: 20px 0;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
         }
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .nav-button {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            margin: 0 10px;
+        .button {
+            background: rgba(41, 20, 78, 0.8);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
         }
-        .nav-button:hover {
-            background-color: #45a049;
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
+            background: rgba(61, 30, 118, 0.8);
+        }
+        .button::after {
+            content: '→';
+            font-size: 24px;
+        }
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -1;
+        }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
         }
         .star {
             position: absolute;
-            background-color: white;
-            width: 2px;
-            height: 2px;
+            background-color: #fff;
             border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
+    <div class="space-bg"></div>
+    <div class="stars"></div>
     <div class="container">
-        <h1>Welcome to CosmicBrain</h1>
-        <p>Small hits add up, rejuvenate your brain!</p>
-        <div>
-            <a href="games.html" class="nav-button">Games</a>
-            <a href="health-bot.html" class="nav-button">Chatbot</a>
-            <a href="about.html" class="nav-button">About</a>
-        </div>
+        <header>
+            <img src="cosmic_brain_logo.png" alt="Cosmic Brain Logo" class="logo">
+            <h1>Cosmic Brain</h1>
+        </header>
+        <main>
+            <button class="button" onclick="location.href='color-match.html'">Color Match</button>
+            <button class="button" onclick="location.href='memory-matrix.html'">Memory Matrix</button>
+            <button class="button" onclick="location.href='health-bot.html'">Health Bot</button>
+        </main>
     </div>
-
     <script>
-        // Add twinkling stars
-        for (let i = 0; i < 100; i++) {
-            let star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.animationDuration = `${Math.random() * 3 + 1}s`;
-            document.body.appendChild(star);
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = `${Math.random() * 2}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                starsContainer.appendChild(star);
+            }
         }
+        createStars();
     </script>
 </body>
 </html>
