@@ -6,13 +6,82 @@
     <title>Cosmic Brain</title>
     <style>
         body, html {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
-            background-color: #0a0a2a;
+            background: linear-gradient(to bottom, #0a0a2a, #1a1a4a);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .logo-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .logo {
+            width: 250px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
             color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .tagline {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #9d8df1;
+        }
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .button {
+            background: rgba(41, 20, 78, 0.8);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
+            background: rgba(61, 30, 118, 0.8);
+        }
+        .button::after {
+            content: '→';
+            font-size: 24px;
         }
         .cosmic-bg {
             position: fixed;
@@ -20,73 +89,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
-            z-index: -1;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .nebula {
+            position: absolute;
+            width: 100%;
             height: 100%;
-            box-sizing: border-box;
+            background: radial-gradient(ellipse at center, rgba(100,0,255,0.2) 0%, rgba(100,0,255,0) 70%);
+            opacity: 0.5;
+            animation: nebula-move 60s infinite alternate;
         }
-        .logo-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            padding: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 120px;
-            height: 120px;
-        }
-        .logo {
-            width: 100px;
-            height: auto;
-        }
-        h1 {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 10px 0;
-            text-align: center;
-        }
-        .tagline {
-            font-size: 18px;
-            color: #9d8df1;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .button-container {
-            width: 100%;
-            max-width: 400px;
-        }
-        .button {
-            background: rgba(41, 20, 78, 0.8);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
-        }
-        .button:hover {
-            background: rgba(61, 30, 118, 0.8);
-            box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
-        }
-        .button::after {
-            content: '→';
-            font-size: 24px;
+        @keyframes nebula-move {
+            0% { transform: translate(-10%, -10%); }
+            100% { transform: translate(10%, 10%); }
         }
         .star {
             position: absolute;
@@ -101,31 +118,35 @@
     </style>
 </head>
 <body>
-    <div class="cosmic-bg"></div>
+    <div class="cosmic-bg">
+        <div class="nebula"></div>
+    </div>
     <div class="container">
-        <div class="logo-container">
-            <img src="cosmicbrain (1).png" alt="Cosmic Brain Logo" class="logo">
-        </div>
-        <h1>Cosmic Brain</h1>
-        <p class="tagline">Small hits add up, rejuvenate your brain</p>
-        <div class="button-container">
+        <header>
+            <div class="logo-container">
+                <img src="cosmicbrain (1).png" alt="Cosmic Brain Logo" class="logo">
+            </div>
+            <h1>Cosmic Brain</h1>
+            <p class="tagline">Small hits add up, rejuvenate your brain</p>
+        </header>
+        <main>
             <button class="button" onclick="location.href='color-match.html'">Color Match</button>
             <button class="button" onclick="location.href='memory-matrix.html'">Memory Matrix</button>
             <button class="button" onclick="location.href='health-bot.html'">Health Bot</button>
-        </div>
+        </main>
     </div>
     <script>
         function createStars() {
-            const body = document.body;
+            const bg = document.querySelector('.cosmic-bg');
             for (let i = 0; i < 100; i++) {
                 const star = document.createElement('div');
-                star.className = 'star';
+                star.classList.add('star');
                 star.style.width = `${Math.random() * 2 + 1}px`;
                 star.style.height = star.style.width;
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
                 star.style.animationDelay = `${Math.random() * 4}s`;
-                body.appendChild(star);
+                bg.appendChild(star);
             }
         }
         createStars();
