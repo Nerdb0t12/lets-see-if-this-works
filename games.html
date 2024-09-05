@@ -33,70 +33,39 @@
             height: 100%;
             box-sizing: border-box;
         }
-        .logo-container {
-            width: 220px;
-            height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-        }
-        .logo {
-            width: 200px;
-            height: auto;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-        }
         h1 {
             font-size: 36px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 20px 0;
             text-align: center;
-        }
-        .tagline {
-            font-size: 18px;
             color: #9d8df1;
-            margin-bottom: 40px;
-            text-align: center;
         }
-        .button-container {
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             width: 100%;
-            max-width: 400px;
         }
-        .button {
+        .game-card {
             background: rgba(41, 20, 78, 0.8);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            margin: 10px 0;
             border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
+            padding: 20px;
+            text-align: center;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+            cursor: pointer;
         }
-        .button:hover {
+        .game-card:hover {
             background: rgba(61, 30, 118, 0.8);
             box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
         }
-        .button::after {
-            content: '→';
+        .game-title {
             font-size: 24px;
+            margin-bottom: 10px;
+            color: #9d8df1;
         }
-        .star {
-            position: absolute;
-            background-color: #ffffff;
-            border-radius: 50%;
-            animation: twinkle 4s infinite;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        .game-description {
+            font-size: 14px;
+            color: #ffffff;
         }
         .home-button {
             position: absolute;
@@ -109,22 +78,33 @@
             border-radius: 5px;
             font-size: 14px;
         }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
     <div class="container">
-        <div class="logo-container">
-            <img src="cosmic_brain_logo.png" alt="Cosmic Brain Logo" class="logo">
-        </div>
         <h1>Cosmic Brain Games</h1>
-        <p class="tagline">Challenge your mind with our cosmic collection</p>
-        <div class="button-container">
-            <button class="button" onclick="location.href='color-match.html'">Color Match</button>
-            <button class="button" onclick="location.href='memory-matrix.html'">Memory Matrix</button>
-            <button class="button" onclick="location.href='space-puzzle.html'">Space Puzzle</button>
-            <button class="button" onclick="location.href='cosmic-quiz.html'">Cosmic Quiz</button>
+        <div class="game-grid">
+            <div class="game-card" onclick="location.href='color-match.html'">
+                <div class="game-title">Color Match</div>
+                <div class="game-description">Test your cognitive flexibility with this color-word matching game.</div>
+            </div>
+            <div class="game-card" onclick="location.href='memory-matrix.html'">
+                <div class="game-title">Memory Matrix</div>
+                <div class="game-description">Challenge your spatial memory by remembering patterns.</div>
+            </div>
+            <!-- Add more game cards here as you develop more games -->
         </div>
     </div>
     <script>
