@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain Team Hub</title>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0a0a2a;
+            color: #ffffff;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            color: #9d8df1;
+        }
+        .section {
+            background: rgba(41, 20, 78, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .section h2 {
+            font-size: 24px;
+            margin-top: 0;
+            color: #9d8df1;
+        }
+        .section p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button {
+            background: rgba(157, 141, 241, 0.3);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background: rgba(157, 141, 241, 0.5);
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <a href="index.html" class="home-button">Home</a>
+    <div class="container">
+        <h1>Team Hub</h1>
+        
+        <div class="section">
+            <h2>Player Dashboard</h2>
+            <p>View your personal stats, recent game scores, and achievements.</p>
+            <button class="button">View Dashboard</button>
+        </div>
+        
+        <div class="section">
+            <h2>Progress Tracking</h2>
+            <p>Track your improvement over time in various cognitive skills.</p>
+            <button class="button">Check Progress</button>
+        </div>
+        
+        <div class="section">
+            <h2>Alerts and Notifications</h2>
+            <p>Stay updated with important team announcements and personal milestones.</p>
+            <button class="button">View Notifications</button>
+        </div>
+        
+        <div class="section">
+            <h2>Team Overview</h2>
+            <p>See how your team is performing and compare stats with teammates.</p>
+            <button class="button">Team Stats</button>
+        </div>
+    </div>
+    
+    <script>
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+</body>
+</html>
