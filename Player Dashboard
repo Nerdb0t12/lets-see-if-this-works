@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain Player Dashboard</title>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #0a0a2a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: rgba(41, 20, 78, 0.8);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        h1, h2 {
+            color: #9d8df1;
+            text-align: center;
+        }
+        .player-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .player-list li {
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(157, 141, 241, 0.3);
+            border-radius: 5px;
+            text-align: center;
+        }
+        .player-list li:hover {
+            background-color: rgba(157, 141, 241, 0.5);
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
+        }
+        .section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress {
+            width: 75%;
+            height: 20px;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        .trend-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .trend-improving { background-color: #4CAF50; }
+        .trend-stable { background-color: #FFC107; }
+        .trend-declining { background-color: #F44336; }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <a href="index.html" class="home-button">Home</a>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Players</h2>
+            <ul class="player-list">
+                <li>Player 1</li>
+                <li>Player 2</li>
+                <li>Player 3</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <h1>Player Dashboard</h1>
+            <div class="section">
+                <h2>Player Information</h2>
+                <p>Name: Player 1</p>
+                <p>Team: Cosmic Crushers</p>
+                <p>ID: 12345</p>
+            </div>
+            <div class="section">
+                <h2>Recovery Progress</h2>
+                <div class="progress-bar">
+                    <div class="progress">75%</div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Trend Analysis</h2>
+                <p><span class="trend-indicator trend-improving"></span> Player is improving</p>
+                <p>Recent game scores show a positive trend. Overall performance has improved by 15% over the last 7 sessions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+</body>
+</html>
