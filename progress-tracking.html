@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain Progress Tracking</title>
+    <script>
+    // Inline Chart.js to avoid external dependency
+    class Chart{constructor(t,e){this.type=e.type,this.data=e.data,this.options=e.options,this.ctx=t}update(){this.clear();this.drawChart()}clear(){this.ctx.clearRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height)}drawChart(){if(this.type==="line"){this.drawLineChart()}else if(this.type==="bar"){this.drawBarChart()}}drawLineChart(){const t=this.ctx.canvas.width,e=this.ctx.canvas.height,s=this.data.datasets[0].data,i=Math.max(...s),a=Math.min(...s),n=(e-40)/(i-a),o=(t-40)/s.length;this.ctx.beginPath();this.ctx.strokeStyle=this.data.datasets[0].borderColor;for(let r=0;r<s.length;r++){const h=20+r*o,d=e-20-(s[r]-a)*n;r===0?this.ctx.moveTo(h,d):this.ctx.lineTo(h,d)}this.ctx.stroke()}drawBarChart(){const t=this.ctx.canvas.width,e=this.ctx.canvas.height,s=this.data.datasets[0].data,i=Math.max(...s),a=(e-60)/i,n=(t-60)/s.length;this.ctx.font="12px Arial";for(let o=0;o<s.length;o++){const r=30+o*n,h=s[o]*a,d=e-40-h;this.ctx.fillStyle=this.data.datasets[0].backgroundColor[o];this.ctx.fillRect(r,d,n-10,h);this.ctx.fillStyle="white";this.ctx.fillText(s[o].toString(),r+n/2-10,d-5);this.ctx.fillText(this.data.labels[o],r+n/2-30,e-20)}}}
+    </script>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #0a0a2a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #9d8df1;
+            text-align: center;
+        }
+        .section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            background: rgba(41, 20, 78, 0.8);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(61, 30, 118, 0.8);
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
+        }
+        .insights {
+            font-size: 18px;
+            text-align: center;
+        }
+        .trend-indicator {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            margin-right: 5px;
+        }
+        .trend-up {
+            border-bottom: 12px solid #4CAF50;
+        }
+        .trend-down {
+            border-top: 12px solid #F44336;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <a href="#" class="home-button" onclick="alert('Home button clicked!')">Home</a>
+    <div class="container">
+        <h1>Progress Tracking</h1>
+        
+        <div class="section">
+            <h2>Performance Over Time</h2>
+            <div class="filters">
+                <button class="filter-btn active" onclick="updateChart('7days')">Last 7 Days</button>
+                <button class="filter-btn" onclick="updateChart('30days')">Last 30 Days</button>
+                <button class="filter-btn" onclick="updateChart('allTime')">All Time</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Game Performance</h2>
+            <div class="chart-container">
+                <canvas id="gamePerformanceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Automated Insights</h2>
+            <div class="insights">
+                <p><span class="trend-indicator trend-up"></span> Player has improved by 15% over the past month in Color Match.</p>
+                <p><span class="trend-indicator trend-down"></span> Memory Matrix scores have dropped by 5% this week.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fake data
+        const performanceData = {
+            '7days': {
+                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                data: [65, 70, 68, 72, 75, 73, 78]
+            },
+            '30days': {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                data: [60, 65, 70, 75]
+            },
+            'allTime': {
+                labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+                data: [50, 55, 60, 65, 70, 75]
+            }
+        };
+
+        // Progress Chart
+        var progressCtx = document.getElementById('progressChart').getContext('2d');
+        var progressChart = new Chart(progressCtx, {
+            type: 'line',
+            data: {
+                labels: performanceData['7days'].labels,
+                datasets: [{
+                    label: 'Overall Performance',
+                    data: performanceData['7days'].data,
+                    borderColor: '#FF6B6B',
+                    backgroundColor: 'rgba(255, 107, 107, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Score'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Game Performance Chart
+        var gameCtx = document.getElementById('gamePerformanceChart').getContext('2d');
+        var gameChart = new Chart(gameCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Color Match', 'Memory Matrix'],
+                datasets: [{
+                    label: 'Average Score',
+                    data: [75, 68],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Average Score'
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateChart(timeRange) {
+            progressChart.data.labels = performanceData[timeRange].labels;
+            progressChart.data.datasets[0].data = performanceData[timeRange].data;
+            progressChart.update();
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Initialize charts
+        progressChart.update();
+        gameChart.update();
+    </script>
+</body>
+</html>
