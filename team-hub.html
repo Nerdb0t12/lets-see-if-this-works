@@ -2,21 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cosmic Brain Team Hub</title>
     <style>
         body, html {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            height: 100%;
+            overflow: hidden;
             background-color: #0a0a2a;
             color: #ffffff;
-            width: 100%;
-            height: auto;
-            min-height: 100vh;
-        }
-        body {
-            overflow-y: scroll;
         }
         .cosmic-bg {
             position: fixed;
@@ -31,61 +27,70 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
             box-sizing: border-box;
-            position: relative;
-            z-index: 1;
+        }
+        .logo-container {
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+        .logo {
+            width: 200px;
+            height: auto;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
         }
         h1 {
             font-size: 36px;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 10px 0;
             text-align: center;
             color: #9d8df1;
         }
-        .section {
-            background: rgba(41, 20, 78, 0.8);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
-        }
-        .section h2 {
-            font-size: 24px;
-            margin-top: 0;
+        .tagline {
+            font-size: 18px;
             color: #9d8df1;
+            margin-bottom: 40px;
+            text-align: center;
         }
-        .section p {
-            font-size: 16px;
-            line-height: 1.5;
+        .button-container {
+            width: 100%;
+            max-width: 400px;
         }
         .button {
-            background: rgba(157, 141, 241, 0.3);
+            background: rgba(41, 20, 78, 0.8);
             color: #fff;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s;
-            display: inline-block;
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
         }
         .button:hover {
-            background: rgba(157, 141, 241, 0.5);
+            background: rgba(61, 30, 118, 0.8);
+            box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
         }
-        .star {
-            position: fixed;
-            background-color: #ffffff;
-            border-radius: 50%;
-            animation: twinkle 4s infinite;
-            pointer-events: none;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        .button::after {
+            content: '→';
+            font-size: 24px;
         }
         .home-button {
-            position: fixed;
+            position: absolute;
             top: 10px;
             left: 10px;
             background-color: rgba(255, 255, 255, 0.2);
@@ -94,11 +99,16 @@
             text-decoration: none;
             border-radius: 5px;
             font-size: 14px;
-            z-index: 1000;
         }
-        .footer {
-            height: 100px;
-            width: 100%;
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
@@ -106,35 +116,18 @@
     <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
     <div class="container">
+        <div class="logo-container">
+            <img src="cosmicbrain (1).png" alt="Cosmic Brain Logo" class="logo">
+        </div>
         <h1>Team Hub</h1>
-        
-        <div class="section">
-            <h2>Player Dashboard</h2>
-            <p>View your personal stats, recent game scores, and achievements.</p>
-            <button class="button" onclick="location.href='player-dashboard.html'">Player Dashboard</button>     
-        </div>
-        
-        <div class="section">
-            <h2>Progress Tracking</h2>
-            <p>Track your improvement over time in various cognitive skills.</p>
-            <button class="button">Check Progress</button>
-        </div>
-        
-        <div class="section">
-            <h2>Alerts and Notifications</h2>
-            <p>Stay updated with important team announcements and personal milestones.</p>
-            <button class="button">View Notifications</button>
-        </div>
-        
-        <div class="section">
-            <h2>Team Overview</h2>
-            <p>See how your team is performing and compare stats with teammates.</p>
-            <button class="button">Team Stats</button>
+        <p class="tagline">Explore your team's cosmic potential</p>
+        <div class="button-container">
+            <button class="button" onclick="location.href='player-dashboard.html'">Player Dashboard</button>
+            <button class="button" onclick="location.href='progress-tracking.html'">Progress Tracking</button>
+            <button class="button" onclick="location.href='alerts-notifications.html'">Alerts and Notifications</button>
+            <button class="button" onclick="location.href='team-overview.html'">Team Overview</button>
         </div>
     </div>
-    
-    <div class="footer"></div>
-
     <script>
         function createStars() {
             const body = document.body;
@@ -150,17 +143,6 @@
             }
         }
         createStars();
-
-        // Force body to be taller than viewport
-        window.addEventListener('load', function() {
-            const body = document.body;
-            const html = document.documentElement;
-            const height = Math.max(body.scrollHeight, body.offsetHeight, 
-                html.clientHeight, html.scrollHeight, html.offsetHeight);
-            if (height <= window.innerHeight) {
-                document.querySelector('.footer').style.height = (window.innerHeight - height + 100) + 'px';
-            }
-        });
     </script>
 </body>
 </html>
