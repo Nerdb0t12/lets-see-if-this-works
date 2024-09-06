@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain Team Overview</title>
+    <style>
+        body, html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #0a0a2a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #9d8df1;
+            text-align: center;
+        }
+        .section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .team-summary {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .sort-filter {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            background: rgba(41, 20, 78, 0.8);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: rgba(61, 30, 118, 0.8);
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
+        }
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .player-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .player-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(157, 141, 241, 0.5);
+        }
+        .player-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .player-score {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .player-trend {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        .trend-green { background-color: rgba(76, 175, 80, 0.3); }
+        .trend-yellow { background-color: rgba(255, 235, 59, 0.3); }
+        .trend-red { background-color: rgba(244, 67, 54, 0.3); }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <a href="index.html" class="home-button">Home</a>
+    <div class="container">
+        <h1>Team Overview</h1>
+        
+        <div class="section">
+            <div class="team-summary">
+                <p>8 players showing improvement, 3 players with declining scores</p>
+                <p>Team average reaction time improved by 15ms this week</p>
+            </div>
+            
+            <div class="controls">
+                <div class="sort-filter">
+                    <button class="btn" onclick="sortPlayers('performance')">Sort by Performance</button>
+                    <button class="btn" onclick="sortPlayers('improvement')">Sort by Improvement</button>
+                    <button class="btn" onclick="filterPlayers('all')">All Games</button>
+                    <button class="btn" onclick="filterPlayers('colorMatch')">Color Match</button>
+                    <button class="btn" onclick="filterPlayers('memoryMatrix')">Memory Matrix</button>
+                </div>
+            </div>
+            
+            <div class="player-grid" id="playerGrid">
+                <!-- Player cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fake player data
+        const players = [
+            { name: "Alex", score: 850, trend: "green", improvement: 15, games: ["colorMatch", "memoryMatrix"] },
+            { name: "Blake", score: 720, trend: "yellow", improvement: 5, games: ["colorMatch"] },
+            { name: "Casey", score: 930, trend: "green", improvement: 20, games: ["memoryMatrix"] },
+            { name: "Dana", score: 680, trend: "red", improvement: -10, games: ["colorMatch", "memoryMatrix"] },
+            { name: "Emerson", score: 800, trend: "green", improvement: 12, games: ["colorMatch"] },
+            { name: "Frankie", score: 750, trend: "yellow", improvement: 3, games: ["memoryMatrix"] },
+            { name: "Gray", score: 890, trend: "green", improvement: 18, games: ["colorMatch", "memoryMatrix"] },
+            { name: "Harper", score: 700, trend: "red", improvement: -5, games: ["colorMatch"] },
+            { name: "Indigo", score: 820, trend: "green", improvement: 10, games: ["memoryMatrix"] },
+            { name: "Jamie", score: 770, trend: "yellow", improvement: 2, games: ["colorMatch", "memoryMatrix"] },
+            { name: "Kennedy", score: 910, trend: "green", improvement: 22, games: ["colorMatch"] },
+            { name: "Logan", score: 690, trend: "red", improvement: -8, games: ["memoryMatrix"] }
+        ];
+
+        function createPlayerCard(player) {
+            return `
+                <div class="player-card">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-score">${player.score}</div>
+                    <div class="player-trend trend-${player.trend}">
+                        ${player.improvement > 0 ? '+' : ''}${player.improvement}%
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPlayers(playerList) {
+            const grid = document.getElementById('playerGrid');
+            grid.innerHTML = playerList.map(createPlayerCard).join('');
+        }
+
+        function sortPlayers(criteria) {
+            let sortedPlayers;
+            if (criteria === 'performance') {
+                sortedPlayers = players.sort((a, b) => b.score - a.score);
+            } else if (criteria === 'improvement') {
+                sortedPlayers = players.sort((a, b) => b.improvement - a.improvement);
+            }
+            renderPlayers(sortedPlayers);
+        }
+
+        function filterPlayers(game) {
+            let filteredPlayers;
+            if (game === 'all') {
+                filteredPlayers = players;
+            } else {
+                filteredPlayers = players.filter(player => player.games.includes(game));
+            }
+            renderPlayers(filteredPlayers);
+        }
+
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+
+        // Initialize the page
+        createStars();
+        renderPlayers(players);
+    </script>
+</body>
+</html>
