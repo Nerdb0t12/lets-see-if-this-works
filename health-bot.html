@@ -2,65 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Health Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Brain Health Bot</title>
     <style>
-        body {
+        body, html {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            height: 100%;
             background-color: #0a0a2a;
-            color: white;
-        }
-        #chat-container {
-            width: 300px;
-            height: 500px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
+            color: #ffffff;
             overflow: hidden;
         }
-        #chat-messages {
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #9d8df1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #chat-container {
             flex-grow: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
             overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        .message {
+            margin-bottom: 15px;
             padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: rgba(61, 30, 118, 0.8);
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: rgba(41, 20, 78, 0.8);
+            align-self: flex-start;
         }
         #user-input {
             display: flex;
-            padding: 10px;
+            gap: 10px;
         }
-        #user-input input {
+        #user-message {
             flex-grow: 1;
-            padding: 5px;
+            padding: 10px;
             border: none;
-            border-radius: 5px 0 0 5px;
-        }
-        #user-input button {
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            cursor: pointer;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 5px;
             border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
-        .user {
-            background-color: rgba(100, 100, 255, 0.3);
-            text-align: right;
+        #send-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #9d8df1;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .bot {
-            background-color: rgba(100, 255, 100, 0.3);
+        #send-button:hover {
+            background-color: #7b6bd3;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
         }
         .home-button {
-            position: absolute;
+            position: fixed;
             top: 10px;
             left: 10px;
             background-color: rgba(255, 255, 255, 0.2);
@@ -69,21 +96,38 @@
             text-decoration: none;
             border-radius: 5px;
             font-size: 14px;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
+    <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
-    <div id="chat-container">
-        <div id="chat-messages"></div>
+    <div class="container">
+        <h1>Health Bot</h1>
+        <div id="chat-container"></div>
         <div id="user-input">
             <input type="text" id="user-message" placeholder="Ask about concussions or sports injuries...">
-            <button onclick="sendMessage()">Send</button>
+            <button id="send-button" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
     <script>
-        const chatMessages = document.getElementById('chat-messages');
+        const chatContainer = document.getElementById('chat-container');
         const userMessageInput = document.getElementById('user-message');
 
         const botResponses = {
@@ -108,10 +152,10 @@
 
         function addMessage(message, sender) {
             const messageElement = document.createElement('div');
-            messageElement.classList.add('message', sender);
+            messageElement.classList.add('message', sender + '-message');
             messageElement.textContent = message;
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
         function getBotReply(userMessage) {
@@ -129,8 +173,22 @@
             }
         });
 
-        // Initial bot message
-        setTimeout(() => addMessage("Hello! I'm your Space Health Bot. How can I help you with concussions or sports injuries today?", 'bot'), 500);
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+
+        createStars();
+        addMessage("Hello! I'm your Space Health Bot. How can I help you with concussions or sports injuries today?", 'bot');
     </script>
 </body>
 </html>
