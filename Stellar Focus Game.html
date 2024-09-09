@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Focus</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #0a0a2a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        h1 {
+            color: #9d8df1;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        #game-area {
+            width: 300px;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.05);
+            margin: 20px auto;
+            position: relative;
+            border-radius: 10px;
+        }
+        .spaceship {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 L90 90 L50 70 L10 90 Z" fill="%239d8df1"/><circle cx="50" cy="45" r="10" fill="%23ffffff"/><path d="M30 85 L50 70 L70 85 L50 100 Z" fill="%23ff6b6b"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .target {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 L90 90 L50 70 L10 90 Z" fill="%23ff6b6b"/><circle cx="50" cy="45" r="10" fill="%23ffffff"/><path d="M30 85 L50 70 L70 85 L50 100 Z" fill="%239d8df1"/></svg>');
+        }
+        .arrow-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .arrow {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(157, 141, 241, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+        .arrow:hover {
+            background-color: rgba(157, 141, 241, 0.5);
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
+        }
+        #timer, #score {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #9d8df1;
+        }
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <a href="index.html" class="home-button">Home</a>
+    <div class="game-container">
+        <h1>Stellar Focus</h1>
+        <div id="timer">Time: 5s</div>
+        <div id="score">Score: 0</div>
+        <div id="game-area"></div>
+        <div class="arrow-container">
+            <div class="arrow" onclick="checkDirection('up')">↑</div>
+            <div class="arrow" onclick="checkDirection('down')">↓</div>
+            <div class="arrow" onclick="checkDirection('left')">←</div>
+            <div class="arrow" onclick="checkDirection('right')">→</div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let timeLeft = 5;
+        let targetDirection;
+        let timerInterval;
+
+        function startGame() {
+            clearInterval(timerInterval);
+            timeLeft = 5;
+            document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+            createSpaceships();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function createSpaceships() {
+            const gameArea = document.getElementById('game-area');
+            gameArea.innerHTML = '';
+            const directions = ['up', 'down', 'left', 'right'];
+            targetDirection = directions[Math.floor(Math.random() * directions.length)];
+
+            for (let i = 0; i < 5; i++) {
+                const spaceship = document.createElement('div');
+                spaceship.className = 'spaceship';
+                if (i === 0) {
+                    spaceship.classList.add('target');
+                    spaceship.style.transform = `rotate(${getRotation(targetDirection)}deg)`;
+                } else {
+                    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+                    spaceship.style.transform = `rotate(${getRotation(randomDirection)}deg)`;
+                }
+                spaceship.style.left = `${Math.random() * 250}px`;
+                spaceship.style.top = `${Math.random() * 250}px`;
+                gameArea.appendChild(spaceship);
+            }
+        }
+
+        function getRotation(direction) {
+            switch(direction) {
+                case 'up': return 0;
+                case 'right': return 90;
+                case 'down': return 180;
+                case 'left': return 270;
+            }
+        }
+
+        function checkDirection(direction) {
+            if (direction === targetDirection) {
+                score += 10;
+                document.getElementById('score').textContent = `Score: ${score}`;
+            }
+            startGame();
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert(`Game Over! Your score: ${score}`);
+                score = 0;
+                document.getElementById('score').textContent = `Score: ${score}`;
+                startGame();
+            }
+        }
+
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+
+        createStars();
+        startGame();
+    </script>
+</body>
+</html>
