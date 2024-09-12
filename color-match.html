@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
             background-color: #0a0a2a;
             color: #ffffff;
         }
@@ -23,6 +22,11 @@
             background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
             z-index: -1;
         }
+        .scroll-container {
+            height: 100%;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -30,83 +34,119 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100%;
+            min-height: 100%;
             box-sizing: border-box;
         }
         h1 {
-            font-size: 36px;
+            font-size: 48px;
             font-weight: bold;
             margin: 20px 0;
             text-align: center;
             color: #9d8df1;
+            text-shadow: 0 0 10px rgba(157, 141, 241, 0.7);
+        }
+        .instructions {
+            font-size: 24px;
+            margin: 20px 0;
+            text-align: center;
+            color: #ff6b6b;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
         }
         .game-info {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
         }
         .score, .timer {
             font-size: 24px;
-            color: #9d8df1;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        .word-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+            width: 100%;
         }
         .card {
             background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
-            margin: 10px 0;
             width: 80%;
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+            box-shadow: 0 0 20px rgba(157, 141, 241, 0.5);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(157, 141, 241, 0.8);
         }
         .word {
-            font-size: 48px;
+            font-size: 64px;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         .label {
             color: #9d8df1;
             margin: 10px 0;
-            font-size: 18px;
-        }
-        .question {
-            color: #ffffff;
-            text-align: center;
-            margin: 20px 0;
-            font-size: 24px;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             width: 100%;
+            margin-top: 30px;
+            margin-bottom: 40px;
         }
         .answer-btn {
-            padding: 15px 30px;
+            padding: 15px 40px;
             border: none;
             color: #fff;
             background-color: rgba(41, 20, 78, 0.8);
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 50px;
             transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
         }
         .answer-btn:hover {
-            background-color: rgba(61, 30, 118, 0.8);
+            background-color: rgba(61, 30, 118, 0.9);
             box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
+            transform: scale(1.05);
         }
         .home-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 5px 10px;
+            padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 30px;
+            font-size: 16px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
         .star {
-            position: absolute;
+            position: fixed;
             background-color: #ffffff;
             border-radius: 50%;
             animation: twinkle 4s infinite;
@@ -115,31 +155,86 @@
             0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
         }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .game-over {
+            background: rgba(41, 20, 78, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(157, 141, 241, 0.8);
+        }
+        .game-over h2 {
+            font-size: 36px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+        .game-over p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .play-again {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #9d8df1;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .play-again:hover {
+            background-color: #ff6b6b;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
     <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
-    <div class="container">
-        <h1>Color Match</h1>
-        <div class="game-info">
-            <div class="score" id="score">Score: 0</div>
-            <div class="timer" id="timer">Time: 30s</div>
+    <div class="scroll-container">
+        <div class="container">
+            <h1>Color Match</h1>
+            <div class="instructions">
+                Does the meaning match the text color?
+            </div>
+            <div class="game-info">
+                <div class="score" id="score">Score: 0</div>
+                <div class="timer" id="timer">Time: 5s</div>
+            </div>
+            <div class="word-container">
+                <div class="label">meaning</div>
+                <div class="card">
+                    <div class="word" id="meaning-word">YELLOW</div>
+                </div>
+            </div>
+            <div class="word-container">
+                <div class="card">
+                    <div class="word" id="color-word">YELLOW</div>
+                </div>
+                <div class="label">text color</div>
+            </div>
+            <div class="button-container">
+                <button class="answer-btn" onclick="checkAnswer(false)">NO</button>
+                <button class="answer-btn" onclick="checkAnswer(true)">YES</button>
+            </div>
         </div>
-        <div class="card">
-            <div class="label">meaning</div>
-            <div class="word" id="meaning-word">YELLOW</div>
-        </div>
-        <div class="card">
-            <div class="label">text color</div>
-            <div class="word" id="color-word">YELLOW</div>
-        </div>
-        <div class="question">
-            Does the meaning of the top card match the text color of the bottom card?
-        </div>
-        <div class="button-container">
-            <button class="answer-btn" onclick="checkAnswer(false)">NO</button>
-            <button class="answer-btn" onclick="checkAnswer(true)">YES</button>
+    </div>
+    <div class="overlay">
+        <div class="game-over">
+            <h2>Game Over!</h2>
+            <p>Your final score: <span id="final-score"></span></p>
+            <button class="play-again" onclick="startGame()">Play Again</button>
         </div>
     </div>
 
@@ -148,17 +243,20 @@
         const colorWord = document.getElementById('color-word');
         const scoreDisplay = document.getElementById('score');
         const timerDisplay = document.getElementById('timer');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const overlay = document.querySelector('.overlay');
         const colors = ['RED', 'BLUE', 'GREEN', 'YELLOW'];
         let score = 0;
-        let timeLeft = 30;
+        let timeLeft = 5;
         let timerInterval;
 
         function newRound() {
             const meaningIndex = Math.floor(Math.random() * colors.length);
             const colorIndex = Math.floor(Math.random() * colors.length);
+            const textIndex = Math.floor(Math.random() * colors.length);
             
             meaningWord.textContent = colors[meaningIndex];
-            colorWord.textContent = colors[colorIndex];
+            colorWord.textContent = colors[textIndex];
             colorWord.style.color = colors[colorIndex].toLowerCase();
         }
 
@@ -166,12 +264,13 @@
             const correctAnswer = meaningWord.textContent === colorWord.style.color.toUpperCase();
             if (playerAnswer === correctAnswer) {
                 score += 10;
-                if (timeLeft > 25) score += 5; // Bonus for quick answers
+                if (timeLeft > 3) score += 5; // Bonus for quick answers
             } else {
                 score = Math.max(0, score - 5);
             }
             updateScore();
             newRound();
+            resetTimer();
         }
 
         function updateScore() {
@@ -187,19 +286,25 @@
             }
         }
 
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 5;
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
         function startGame() {
             score = 0;
-            timeLeft = 30;
             updateScore();
-            updateTimer();
             newRound();
-            timerInterval = setInterval(updateTimer, 1000);
+            resetTimer();
+            overlay.style.display = 'none';
         }
 
         function endGame() {
             clearInterval(timerInterval);
-            alert(`Game Over! Your final score is ${score}`);
-            startGame();
+            finalScoreDisplay.textContent = score;
+            overlay.style.display = 'flex';
         }
 
         function createStars() {
