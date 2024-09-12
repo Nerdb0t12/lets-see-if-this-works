@@ -2,27 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Space Memory Matrix</title>
     <style>
-        body {
+        body, html {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100%;
             background-color: #0a0a2a;
             color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+        }
+        .cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
+            z-index: -1;
+        }
+        .scroll-container {
+            height: 100%;
+            overflow-y: auto;
+            scroll-behavior: smooth;
         }
         .container {
-            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+            box-sizing: border-box;
         }
         h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            color: #9d8df1;
+            text-shadow: 0 0 10px rgba(157, 141, 241, 0.7);
+        }
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
+        }
+        .score, .timer, .level {
+            font-size: 24px;
+            color: #ff6b6b;
+            font-weight: bold;
         }
         #grid {
             display: inline-grid;
@@ -44,26 +80,25 @@
         .tile.highlight {
             background-color: rgba(157, 141, 241, 0.8);
         }
-        #score, #level, #timer {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        button {
-            background: rgba(41, 20, 78, 0.8);
-            color: #fff;
-            border: none;
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
             padding: 10px 20px;
-            margin: 10px;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        button:hover {
-            background: rgba(61, 30, 118, 0.8);
+        .home-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
         .star {
-            position: absolute;
+            position: fixed;
             background-color: #ffffff;
             border-radius: 50%;
             animation: twinkle 4s infinite;
@@ -72,28 +107,41 @@
             0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
         }
-        .home-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 5px 10px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
+        #start-btn {
+            background: rgba(41, 20, 78, 0.8);
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            margin: 10px;
+            border-radius: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+        }
+        #start-btn:hover {
+            background: rgba(61, 30, 118, 0.8);
+            box-shadow: 0 0 25px rgba(157, 141, 241, 0.8);
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
+    <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
-    <div class="container">
-        <h1>Space Memory Matrix</h1>
-        <div id="grid"></div>
-        <div id="score">Score: 0</div>
-        <div id="level">Level: 1</div>
-        <div id="timer">Time: 5s</div>
-        <button id="start-btn">Start Game</button>
+    <div class="scroll-container">
+        <div class="container">
+            <h1>Space Memory Matrix</h1>
+            <div class="game-info">
+                <div class="score" id="score">Score: 0</div>
+                <div class="level" id="level">Level: 1</div>
+                <div class="timer" id="timer">Time: 30s</div>
+            </div>
+            <div id="grid"></div>
+            <button id="start-btn">Start Game</button>
+        </div>
     </div>
 
     <script>
@@ -103,14 +151,13 @@
         const timerDisplay = document.getElementById('timer');
         const startBtn = document.getElementById('start-btn');
 
-        let gridSize = 4;
+        let gridSize = 3;
         let level = 1;
         let score = 0;
-        let objectCount = 3;
-        let memorizeTime = 5;
         let pattern = [];
         let playerSelections = [];
         let gameActive = false;
+        let timeLeft = 30;
         let timerInterval;
 
         function createGrid() {
@@ -126,12 +173,13 @@
 
         function generatePattern() {
             pattern = [];
-            for (let i = 0; i < objectCount; i++) {
-                let randomTile;
-                do {
-                    randomTile = Math.floor(Math.random() * (gridSize * gridSize));
-                } while (pattern.includes(randomTile));
-                pattern.push(randomTile);
+            const totalTiles = gridSize * gridSize;
+            const patternLength = Math.min(level + 2, Math.floor(totalTiles / 2));
+            while (pattern.length < patternLength) {
+                const randomTile = Math.floor(Math.random() * totalTiles);
+                if (!pattern.includes(randomTile)) {
+                    pattern.push(randomTile);
+                }
             }
         }
 
@@ -153,7 +201,6 @@
 
         function startPlayerTurn() {
             gameActive = true;
-            startTimer(30);
         }
 
         function tileClick(index) {
@@ -169,7 +216,6 @@
 
         function checkPattern() {
             gameActive = false;
-            clearInterval(timerInterval);
             let correct = true;
             for (let i = 0; i < pattern.length; i++) {
                 if (pattern[i] !== playerSelections[i]) {
@@ -178,41 +224,22 @@
                 }
             }
             if (correct) {
-                score += 100;
+                score += 100 * level;
                 level++;
                 updateDisplay();
                 setTimeout(nextLevel, 1000);
             } else {
-                alert('Game Over! Try again.');
-                resetGame();
+                endGame();
             }
         }
 
         function nextLevel() {
-            if (level % 5 === 1 && gridSize < 8) {
+            if (level % 2 === 1 && gridSize < 5) {
                 gridSize++;
                 createGrid();
             }
-            objectCount = Math.min(3 + Math.floor(level / 5), 8);
-            memorizeTime = Math.max(5 - Math.floor(level / 10), 2);
             generatePattern();
             showPattern();
-        }
-
-        function startTimer(seconds) {
-            clearInterval(timerInterval);
-            let time = seconds;
-            timerDisplay.textContent = `Time: ${time}s`;
-            timerInterval = setInterval(() => {
-                time--;
-                timerDisplay.textContent = `Time: ${time}s`;
-                if (time <= 0) {
-                    clearInterval(timerInterval);
-                    gameActive = false;
-                    alert('Time\'s up! Game Over!');
-                    resetGame();
-                }
-            }, 1000);
         }
 
         function updateDisplay() {
@@ -220,38 +247,50 @@
             levelDisplay.textContent = `Level: ${level}`;
         }
 
-        function resetGame() {
-            clearInterval(timerInterval);
-            gridSize = 4;
-            level = 1;
-            score = 0;
-            objectCount = 3;
-            memorizeTime = 5;
-            updateDisplay();
-            createGrid();
+        function updateTimer() {
+            timerDisplay.textContent = `Time: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                endGame();
+            } else {
+                timeLeft--;
+            }
         }
 
         function startGame() {
-            resetGame();
+            score = 0;
+            level = 1;
+            gridSize = 3;
+            timeLeft = 30;
+            updateDisplay();
+            createGrid();
             generatePattern();
             showPattern();
+            startBtn.style.display = 'none';
+            timerInterval = setInterval(updateTimer, 1000);
         }
 
+        function endGame() {
+            clearInterval(timerInterval);
+            alert(`Game Over! Your final score: ${score}`);
+            startBtn.style.display = 'block';
+        }
+
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+
+        createStars();
         startBtn.addEventListener('click', startGame);
-
-        // Create stars
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = `${Math.random() * 2 + 1}px`;
-            star.style.height = star.style.width;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.animationDelay = `${Math.random() * 4}s`;
-            document.body.appendChild(star);
-        }
-
-        createGrid();
     </script>
 </body>
 </html>
