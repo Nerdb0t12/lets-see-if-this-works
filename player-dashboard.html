@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cosmic Brain Player Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Brain Coach Dashboard</title>
     <style>
         body, html {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100%;
+            font-family: Arial, sans-serif;
             background-color: #0a0a2a;
             color: #ffffff;
-            overflow: hidden;
+            height: 100%;
         }
         .cosmic-bg {
             position: fixed;
@@ -23,93 +22,172 @@
             background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
             z-index: -1;
         }
-        .container {
-            display: flex;
+        .scroll-container {
             height: 100%;
-        }
-        .sidebar {
-            width: 200px;
-            background-color: rgba(41, 20, 78, 0.8);
-            padding: 20px;
             overflow-y: auto;
+            scroll-behavior: smooth;
+            padding-top: 60px; /* Space for fixed header */
         }
-        .main-content {
-            flex-grow: 1;
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100% - 60px);
             padding: 20px;
-            overflow-y: auto;
+            box-sizing: border-box;
         }
-        h1, h2 {
-            color: #9d8df1;
-            text-align: center;
-        }
-        .player-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .player-list li {
-            padding: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(157, 141, 241, 0.3);
-            border-radius: 5px;
-            text-align: center;
-        }
-        .player-list li:hover {
-            background-color: rgba(157, 141, 241, 0.5);
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
-        }
-        .section {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
-        }
-        .progress-bar {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        .progress {
-            width: 75%;
-            height: 20px;
-            background-color: #4CAF50;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-        }
-        .trend-indicator {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .trend-improving { background-color: #4CAF50; }
-        .trend-stable { background-color: #FFC107; }
-        .trend-declining { background-color: #F44336; }
-        .home-button {
+        .fixed-header {
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: rgba(10, 10, 42, 0.8);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+        .home-button {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 5px 10px;
+            padding: 8px 15px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 20px;
             font-size: 14px;
-            z-index: 1000;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            margin-right: 20px;
         }
         .home-button:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        .player-select {
+            margin-left: auto;
+        }
+        .player-select select {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .player-select select:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        .player-select select option {
+            background-color: #0a0a2a;
+            color: white;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .player-info {
+            text-align: left;
+        }
+        .player-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #9d8df1;
+            text-shadow: 0 0 10px rgba(157, 141, 241, 0.7);
+        }
+        .player-details {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        .quick-stats {
+            font-size: 18px;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+        }
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .column {
+            flex: 1 1 300px;
+            min-width: 300px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
+        }
+        .performance-scores {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
+            margin: 10px;
+        }
+        .score-value {
+            font-size: 24px;
+        }
+        .score-label {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .recovery-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .progress-bar {
+            width: 30px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
+        }
+        .progress {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #ff6b6b, #4CAF50);
+            transition: height 0.5s;
+        }
+        .progress-label {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .trend-analysis {
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
+        }
+        .notes {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
         }
         .star {
-            position: absolute;
+            position: fixed;
             background-color: #ffffff;
             border-radius: 50%;
             animation: twinkle 4s infinite;
@@ -122,34 +200,62 @@
 </head>
 <body>
     <div class="cosmic-bg"></div>
-    <a href="index.html" class="home-button">Home</a>
-    <div class="container">
-        <div class="sidebar">
-            <h2>Players</h2>
-            <ul class="player-list">
-                <li>Player 1</li>
-                <li>Player 2</li>
-                <li>Player 3</li>
-            </ul>
+    <div class="fixed-header">
+        <a href="index.html" class="home-button">Home</a>
+        <div class="player-select">
+            <select onchange="changePlayer(this.value)">
+                <option value="player1">Alex Johnson</option>
+                <option value="player2">Sarah Smith</option>
+                <option value="player3">Mike Brown</option>
+            </select>
         </div>
-        <div class="main-content">
-            <h1>Player Dashboard</h1>
-            <div class="section">
-                <h2>Player Information</h2>
-                <p>Name: Player 1</p>
-                <p>Team: Cosmic Crushers</p>
-                <p>ID: 12345</p>
+    </div>
+    <div class="scroll-container">
+        <div class="dashboard">
+            <div class="header">
+                <div class="player-info">
+                    <div class="player-name" id="playerName">Alex Johnson</div>
+                    <div class="player-details" id="playerDetails">Forward - Cosmic Crushers</div>
+                </div>
+                <div class="quick-stats" id="overallPerformance">Overall Performance: 85%</div>
             </div>
-            <div class="section">
-                <h2>Recovery Progress</h2>
-                <div class="progress-bar">
-                    <div class="progress">75%</div>
+            <div class="main-content">
+                <div class="column">
+                    <h2>Performance Scores</h2>
+                    <div class="performance-scores">
+                        <div class="score-circle" style="background-color: rgba(76, 175, 80, 0.3);">
+                            <div class="score-value">85</div>
+                            <div class="score-label">Memory</div>
+                        </div>
+                        <div class="score-circle" style="background-color: rgba(255, 235, 59, 0.3);">
+                            <div class="score-value">70</div>
+                            <div class="score-label">Attention</div>
+                        </div>
+                        <div class="score-circle" style="background-color: rgba(255, 87, 34, 0.3);">
+                            <div class="score-value">300</div>
+                            <div class="score-label">Reaction (ms)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <h2>Recovery Progress</h2>
+                    <div class="recovery-progress">
+                        <div class="progress-bar">
+                            <div class="progress" style="height: 75%;"></div>
+                        </div>
+                        <div class="progress-label">75% Recovered</div>
+                    </div>
+                </div>
+                <div class="column">
+                    <h2>Trend Analysis</h2>
+                    <div class="trend-analysis">
+                        <canvas id="trendChart" width="300" height="200"></canvas>
+                    </div>
                 </div>
             </div>
-            <div class="section">
-                <h2>Trend Analysis</h2>
-                <p><span class="trend-indicator trend-improving"></span> Player is improving</p>
-                <p>Recent game scores show a positive trend. Overall performance has improved by 15% over the last 7 sessions.</p>
+            <div class="notes">
+                <h2>Additional Notes</h2>
+                <p>Player showing consistent improvement in memory tasks. Attention scores have plateaued - consider focused exercises.</p>
             </div>
         </div>
     </div>
@@ -168,7 +274,67 @@
                 body.appendChild(star);
             }
         }
+
+        function drawChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(157, 141, 241, 0.8)');
+            gradient.addColorStop(1, 'rgba(157, 141, 241, 0.2)');
+
+            ctx.beginPath();
+            ctx.moveTo(0, 150);
+            ctx.lineTo(50, 120);
+            ctx.lineTo(100, 140);
+            ctx.lineTo(150, 100);
+            ctx.lineTo(200, 80);
+            ctx.lineTo(250, 60);
+            ctx.lineTo(300, 50);
+            ctx.strokeStyle = '#9d8df1';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.lineTo(300, 200);
+            ctx.lineTo(0, 200);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '12px Arial';
+            ctx.fillText('Week 1', 0, 190);
+            ctx.fillText('Week 2', 50, 190);
+            ctx.fillText('Week 3', 100, 190);
+            ctx.fillText('Week 4', 150, 190);
+            ctx.fillText('Week 5', 200, 190);
+            ctx.fillText('Week 6', 250, 190);
+        }
+
+        function changePlayer(playerId) {
+            let playerName = document.getElementById('playerName');
+            let playerDetails = document.getElementById('playerDetails');
+            let overallPerformance = document.getElementById('overallPerformance');
+
+            switch(playerId) {
+                case 'player1':
+                    playerName.textContent = 'Alex Johnson';
+                    playerDetails.textContent = 'Forward - Cosmic Crushers';
+                    overallPerformance.textContent = 'Overall Performance: 85%';
+                    break;
+                case 'player2':
+                    playerName.textContent = 'Sarah Smith';
+                    playerDetails.textContent = 'Midfielder - Stellar Strikers';
+                    overallPerformance.textContent = 'Overall Performance: 78%';
+                    break;
+                case 'player3':
+                    playerName.textContent = 'Mike Brown';
+                    playerDetails.textContent = 'Defender - Galactic Guards';
+                    overallPerformance.textContent = 'Overall Performance: 92%';
+                    break;
+            }
+        }
+
         createStars();
+        drawChart();
     </script>
 </body>
 </html>
