@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Brain Team Overview</title>
     <style>
         body, html {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100%;
+            font-family: Arial, sans-serif;
             background-color: #0a0a2a;
             color: #ffffff;
-            overflow-x: hidden;
+            height: 100%;
         }
         .cosmic-bg {
             position: fixed;
@@ -40,91 +39,94 @@
             box-shadow: 0 0 15px rgba(157, 141, 241, 0.5);
         }
         .team-summary {
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
         }
+        .summary-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            flex: 0 1 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        .summary-card h3 {
+            margin-top: 0;
+            color: #ff6b6b;
+            font-size: 18px;
+        }
+        .summary-card p {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .improving { color: #4CAF50; }
+        .declining { color: #F44336; }
         .controls {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
         }
-        .sort-filter {
+        .search-filter {
             display: flex;
             gap: 10px;
         }
-        .btn {
-            background: rgba(41, 20, 78, 0.8);
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
+        input, select {
+            padding: 8px;
             border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn:hover {
-            background: rgba(61, 30, 118, 0.8);
-            box-shadow: 0 0 15px rgba(157, 141, 241, 0.8);
-        }
-        .player-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .player-card {
+            border: none;
             background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s;
+            color: white;
         }
-        .player-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(157, 141, 241, 0.5);
+        .player-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .player-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .player-table th, .player-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .player-score {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .player-table th {
+            background-color: rgba(157, 141, 241, 0.3);
+            cursor: pointer;
         }
-        .player-trend {
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 15px;
+        .player-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
             display: inline-block;
+            margin-right: 5px;
         }
-        .trend-green { background-color: rgba(76, 175, 80, 0.3); }
-        .trend-yellow { background-color: rgba(255, 235, 59, 0.3); }
-        .trend-red { background-color: rgba(244, 67, 54, 0.3); }
+        .status-green { background-color: #4CAF50; }
+        .status-yellow { background-color: #FFC107; }
+        .status-red { background-color: #F44336; }
         .home-button {
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 20px;
+            left: 20px;
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 5px 10px;
+            padding: 10px 20px;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 30px;
+            font-size: 16px;
             z-index: 1000;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
         .home-button:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-        }
-        .star {
-            position: absolute;
-            background-color: #ffffff;
-            border-radius: 50%;
-            animation: twinkle 4s infinite;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
@@ -135,98 +137,101 @@
         <h1>Team Overview</h1>
         
         <div class="section">
+            <h2>Team Summary</h2>
             <div class="team-summary">
-                <p>8 players showing improvement, 3 players with declining scores</p>
-                <p>Team average reaction time improved by 15ms this week</p>
+                <div class="summary-card">
+                    <h3>Players Improving</h3>
+                    <p class="improving">8</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Players Declining</h3>
+                    <p class="declining">3</p>
+                </div>
             </div>
-            
+        </div>
+        
+        <div class="section">
             <div class="controls">
-                <div class="sort-filter">
-                    <button class="btn" onclick="sortPlayers('performance')">Sort by Performance</button>
-                    <button class="btn" onclick="sortPlayers('improvement')">Sort by Improvement</button>
-                    <button class="btn" onclick="filterPlayers('all')">All Games</button>
-                    <button class="btn" onclick="filterPlayers('colorMatch')">Color Match</button>
-                    <button class="btn" onclick="filterPlayers('memoryMatrix')">Memory Matrix</button>
+                <div class="search-filter">
+                    <input type="text" id="search-input" placeholder="Search players...">
+                    <select id="status-filter">
+                        <option value="all">All Status</option>
+                        <option value="improving">Improving</option>
+                        <option value="stable">Stable</option>
+                        <option value="declining">Declining</option>
+                    </select>
                 </div>
             </div>
             
-            <div class="player-grid" id="playerGrid">
-                <!-- Player cards will be dynamically inserted here -->
-            </div>
+            <table class="player-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Player Name</th>
+                        <th onclick="sortTable(1)">Memory Score</th>
+                        <th onclick="sortTable(2)">Attention Score</th>
+                        <th onclick="sortTable(3)">Reaction Time</th>
+                        <th onclick="sortTable(4)">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="player-table-body">
+                    <!-- Player data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // Fake player data
+        // Sample player data
         const players = [
-            { name: "Alex", score: 850, trend: "green", improvement: 15, games: ["colorMatch", "memoryMatrix"] },
-            { name: "Blake", score: 720, trend: "yellow", improvement: 5, games: ["colorMatch"] },
-            { name: "Casey", score: 930, trend: "green", improvement: 20, games: ["memoryMatrix"] },
-            { name: "Dana", score: 680, trend: "red", improvement: -10, games: ["colorMatch", "memoryMatrix"] },
-            { name: "Emerson", score: 800, trend: "green", improvement: 12, games: ["colorMatch"] },
-            { name: "Frankie", score: 750, trend: "yellow", improvement: 3, games: ["memoryMatrix"] },
-            { name: "Gray", score: 890, trend: "green", improvement: 18, games: ["colorMatch", "memoryMatrix"] },
-            { name: "Harper", score: 700, trend: "red", improvement: -5, games: ["colorMatch"] },
-            { name: "Indigo", score: 820, trend: "green", improvement: 10, games: ["memoryMatrix"] },
-            { name: "Jamie", score: 770, trend: "yellow", improvement: 2, games: ["colorMatch", "memoryMatrix"] },
-            { name: "Kennedy", score: 910, trend: "green", improvement: 22, games: ["colorMatch"] },
-            { name: "Logan", score: 690, trend: "red", improvement: -8, games: ["memoryMatrix"] }
+            { name: "Alex Johnson", memoryScore: 85, attentionScore: 78, reactionTime: 320, status: "improving" },
+            { name: "Sarah Smith", memoryScore: 92, attentionScore: 88, reactionTime: 280, status: "stable" },
+            { name: "Mike Brown", memoryScore: 76, attentionScore: 82, reactionTime: 350, status: "declining" },
+            // Add more players as needed
         ];
 
-        function createPlayerCard(player) {
-            return `
-                <div class="player-card">
-                    <div class="player-name">${player.name}</div>
-                    <div class="player-score">${player.score}</div>
-                    <div class="player-trend trend-${player.trend}">
-                        ${player.improvement > 0 ? '+' : ''}${player.improvement}%
-                    </div>
-                </div>
-            `;
+        function populateTable(players) {
+            const tableBody = document.getElementById('player-table-body');
+            tableBody.innerHTML = '';
+            players.forEach(player => {
+                const row = `
+                    <tr>
+                        <td>${player.name}</td>
+                        <td>${player.memoryScore}</td>
+                        <td>${player.attentionScore}</td>
+                        <td>${player.reactionTime}ms</td>
+                        <td>
+                            <span class="status-indicator status-${player.status === 'improving' ? 'green' : player.status === 'stable' ? 'yellow' : 'red'}"></span>
+                            ${player.status}
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
         }
 
-        function renderPlayers(playerList) {
-            const grid = document.getElementById('playerGrid');
-            grid.innerHTML = playerList.map(createPlayerCard).join('');
+        function sortTable(n) {
+            // Add sorting logic here
         }
 
-        function sortPlayers(criteria) {
-            let sortedPlayers;
-            if (criteria === 'performance') {
-                sortedPlayers = players.sort((a, b) => b.score - a.score);
-            } else if (criteria === 'improvement') {
-                sortedPlayers = players.sort((a, b) => b.improvement - a.improvement);
-            }
-            renderPlayers(sortedPlayers);
-        }
+        // Event listeners for search and filter
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredPlayers = players.filter(player => 
+                player.name.toLowerCase().includes(searchTerm)
+            );
+            populateTable(filteredPlayers);
+        });
 
-        function filterPlayers(game) {
-            let filteredPlayers;
-            if (game === 'all') {
-                filteredPlayers = players;
-            } else {
-                filteredPlayers = players.filter(player => player.games.includes(game));
-            }
-            renderPlayers(filteredPlayers);
-        }
+        document.getElementById('status-filter').addEventListener('change', function() {
+            const selectedStatus = this.value;
+            const filteredPlayers = selectedStatus === 'all' 
+                ? players 
+                : players.filter(player => player.status === selectedStatus);
+            populateTable(filteredPlayers);
+        });
 
-        function createStars() {
-            const body = document.body;
-            for (let i = 0; i < 100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = `${Math.random() * 2 + 1}px`;
-                star.style.height = star.style.width;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 4}s`;
-                body.appendChild(star);
-            }
-        }
-
-        // Initialize the page
-        createStars();
-        renderPlayers(players);
+        // Initial population of the table
+        populateTable(players);
     </script>
 </body>
 </html>
