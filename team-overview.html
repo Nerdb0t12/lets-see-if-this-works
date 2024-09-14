@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cosmic Brain Team Overview</title>
     <style>
         body, html {
@@ -22,14 +22,29 @@
             background: radial-gradient(circle at center, #1a1a4a 0%, #0a0a2a 100%);
             z-index: -1;
         }
+        .scroll-container {
+            height: 100%;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        h1, h2 {
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            color: #9d8df1;
+            text-shadow: 0 0 10px rgba(157, 141, 241, 0.7);
+        }
+        h2 {
             color: #9d8df1;
             text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
         }
         .section {
             background-color: rgba(255, 255, 255, 0.1);
@@ -52,10 +67,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.3s ease;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(157, 141, 241, 0.3);
         }
         .summary-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(157, 141, 241, 0.8);
         }
         .summary-card h3 {
             margin-top: 0;
@@ -79,34 +96,36 @@
             gap: 10px;
         }
         input, select {
-            padding: 8px;
+            padding: 10px;
             border-radius: 5px;
             border: none;
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
+            font-size: 16px;
         }
         .player-table {
             width: 100%;
             border-collapse: collapse;
         }
         .player-table th, .player-table td {
-            padding: 10px;
+            padding: 15px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .player-table th {
             background-color: rgba(157, 141, 241, 0.3);
             cursor: pointer;
+            font-size: 18px;
         }
         .player-table tr:hover {
             background-color: rgba(255, 255, 255, 0.05);
         }
         .status-indicator {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 5px;
+            margin-right: 8px;
         }
         .status-green { background-color: #4CAF50; }
         .status-yellow { background-color: #FFC107; }
@@ -128,55 +147,67 @@
             background-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
+        .star {
+            position: fixed;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="cosmic-bg"></div>
     <a href="index.html" class="home-button">Home</a>
-    <div class="container">
-        <h1>Team Overview</h1>
-        
-        <div class="section">
-            <h2>Team Summary</h2>
-            <div class="team-summary">
-                <div class="summary-card">
-                    <h3>Players Improving</h3>
-                    <p class="improving">8</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Players Declining</h3>
-                    <p class="declining">3</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="controls">
-                <div class="search-filter">
-                    <input type="text" id="search-input" placeholder="Search players...">
-                    <select id="status-filter">
-                        <option value="all">All Status</option>
-                        <option value="improving">Improving</option>
-                        <option value="stable">Stable</option>
-                        <option value="declining">Declining</option>
-                    </select>
+    <div class="scroll-container">
+        <div class="container">
+            <h1>Team Overview</h1>
+            
+            <div class="section">
+                <h2>Team Summary</h2>
+                <div class="team-summary">
+                    <div class="summary-card">
+                        <h3>Players Improving</h3>
+                        <p class="improving">8</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Players Declining</h3>
+                        <p class="declining">3</p>
+                    </div>
                 </div>
             </div>
             
-            <table class="player-table">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Player Name</th>
-                        <th onclick="sortTable(1)">Memory Score</th>
-                        <th onclick="sortTable(2)">Attention Score</th>
-                        <th onclick="sortTable(3)">Reaction Time</th>
-                        <th onclick="sortTable(4)">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="player-table-body">
-                    <!-- Player data will be inserted here by JavaScript -->
-                </tbody>
-            </table>
+            <div class="section">
+                <div class="controls">
+                    <div class="search-filter">
+                        <input type="text" id="search-input" placeholder="Search players...">
+                        <select id="status-filter">
+                            <option value="all">All Status</option>
+                            <option value="improving">Improving</option>
+                            <option value="stable">Stable</option>
+                            <option value="declining">Declining</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <table class="player-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">Player Name</th>
+                            <th onclick="sortTable(1)">Memory Score</th>
+                            <th onclick="sortTable(2)">Attention Score</th>
+                            <th onclick="sortTable(3)">Reaction Time</th>
+                            <th onclick="sortTable(4)">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="player-table-body">
+                        <!-- Player data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -230,8 +261,23 @@
             populateTable(filteredPlayers);
         });
 
-        // Initial population of the table
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 2 + 1}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                body.appendChild(star);
+            }
+        }
+
+        // Initial population of the table and creation of stars
         populateTable(players);
+        createStars();
     </script>
 </body>
 </html>
